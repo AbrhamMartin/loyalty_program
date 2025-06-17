@@ -1,15 +1,22 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import HomePage from './pages/home'
-import './App.css'
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { PocketProvider } from "./pocketconexion";
+import HomePage from "./pages/home";
+import Point from "./pages/points";
+import RegisterUser from "./pages/register";
+import "./App.css";
 
 function App() {
   return (
-    <BrowserRouter>
-    <Routes>
-      <Route index element={<HomePage/>}/>
-    </Routes>
-    </BrowserRouter>
-  )
+    <PocketProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<HomePage />} />
+          <Route path="/points" element={<Point />} />
+          <Route path="/registro" element={<RegisterUser/>} />
+        </Routes>
+      </BrowserRouter>
+    </PocketProvider>
+  );
 }
 
-export default App
+export default App;

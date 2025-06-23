@@ -5,7 +5,7 @@ import { usePocket } from "../pocketconexion";
 function RegisterUser() {
   const { pb } = usePocket();
   const [data, setData] = useState({ rol: "user" });
-  const [modal, ModalisOpen] = useState(true);
+  const [modal, ModalisOpen] = useState(false);
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
@@ -15,7 +15,9 @@ function RegisterUser() {
     "/register",
     async (_, { arg }) => await pb.collection("users").create(arg),
     {
-      onSuccess: (x) => ModalisOpen(true),
+      onSuccess: (x) => {
+        ModalisOpen(true), onRecordCreateRequest(x);
+      },
       onError: (x) => console.log("err:", x),
     }
   );
@@ -91,30 +93,26 @@ function RegisterUser() {
           />
         </div>
 
-        {Register.isMutating ? (
-          <button className="btn btn-info text-white col-span-2">
-            Registro
-          </button>
-        ) : (
-          <button
-            className="btn btn-info text-white col-span-2"
-            onClick={() => {
-              const pass = Math.floor(
-                10000000 + Math.random() * 90000000
-              ).toString();
+        <button
+          className="btn btn-info text-white col-span-2"
+          onClick={() => {
+            const pass = Math.floor(
+              10000000 + Math.random() * 90000000
+            ).toString();
 
+            !Register.isMutating &&
               Register.trigger({
                 ...data,
                 password: pass,
                 passwordConfirm: pass,
               });
 
-              setData({...data, password: pass})
-            }}
-          >
-            Registro
-          </button>
-        )}
+            setData({ ...data, password: pass });
+          }}
+        >
+          Registro
+        </button>
+
         <span>
           Ya estas registrado? Haz clic{" "}
           <a href="/" className="link link-info">
@@ -125,19 +123,18 @@ function RegisterUser() {
       {modal && (
         <div className="fixed inset-0 flex items-center justify-center bg-slate-400/40">
           <div className="bg-white p-6 rounded shadow flex flex-col items-center justify-center gap-2">
-            <h2 className="text-lg font-bold">
-              ¡Te has registrado con exito!
-            </h2>
-            <p>
-              Tu nueva contraseña es: </p>
-              <span className="font-bold">{data?.password || "000-000-00"}</span>
-            <button onClick={() => ModalisOpen(false)} className="btn btn-info text-white">
+            <h2 className="text-lg font-bold">¡Te has registrado con exito!</h2>
+            <p>Tu nueva contraseña es: </p>
+            <span className="font-bold">{data?.password || "000-000-00"}</span>
+            <button
+              onClick={() => ModalisOpen(false)}
+              className="btn btn-info text-white"
+            >
               Ok
             </button>
           </div>
         </div>
       )}
-      
     </div>
   );
 }

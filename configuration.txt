@@ -1,0 +1,30 @@
+DockerFile
+# Etapa de build (React + Vite)
+FROM node:20 AS build
+WORKDIR /app
+COPY . .
+RUN npm install
+RUN npm run build
+
+# Etapa de producción (Nginx)
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+EXPOSE 80
+
+-----------------------------------------------------------------------------
+Docker-compose
+services:
+  web:
+    build:
+      context: ./Points
+    depends_on:
+      - pocketbase
+    ports:
+      - 3000:80   # Puerto externo 3000, interno 80 (Nginx)
+
+  pocketbase:
+    image: elestio/pocketbase
+    ports:
+      - 8090:8090
+    volumes:
+      - ./pb_data:/pb_data

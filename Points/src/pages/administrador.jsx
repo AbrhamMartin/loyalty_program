@@ -10,9 +10,16 @@ import {
   CreateProduct,
 } from "../components/modalsproducts";
 import { ToastContainer, toast } from "react-toastify";
+import { validateRegisterProduct } from "../components/validation";
+
 function AdminPage({ pb, url }) {
   const [barra, setBarra] = useState("");
   const [data, setData] = useState();
+  const [errRegister, setErrorRegister] = useState();
+
+  const initial = { nombre: "", descripcion: "", precio: 0 };
+  const [producto, setProducto] = useState(initial);
+
   const getProductos = useSWR(
     "/getproductos",
     async () => await pb.collection("productos").getFullList()
@@ -139,7 +146,27 @@ function AdminPage({ pb, url }) {
         url={url}
       />
       <CreateProduct
-        action={(x) => !createProducto.isMutating && createProducto.trigger(x)}
+        resetData={initial}
+        errs={errRegister}
+        producto={producto}
+        setProducto={setProducto}
+        action={(x) =>
+          validateRegisterProduct
+            .validate(x, { abortEarly: false })
+            .then(() => {
+              !createProducto.isMutating && createProducto.trigger(x),
+                document.getElementById("insproducto").close();
+              setErrorRegister(null);
+              setProducto(initial);
+            })
+            .catch((x) => {
+              const formattedErrors = x.inner.reduce((acc, err) => {
+                acc[err.path] = err.message;
+                return acc;
+              }, {});
+              setErrorRegister(formattedErrors);
+            })
+        }
       />
       <ToastContainer />
     </div>

@@ -138,12 +138,11 @@ export const UpdateProducto = ({ data, action, url }) => {
   );
 };
 
-export const CreateProduct = ({action}) => {
-  const initial = { nombre: "", descripcion: "", precio: 0 };
-  const [producto, setProducto] = useState(initial);
+export const CreateProduct = ({ action, errs, producto, setProducto, resetData }) => {
   const handleChange = (e) => {
     setProducto({ ...producto, [e.target.name]: e.target.value });
   };
+
   return (
     <dialog id="insproducto" className="modal modal-bottom sm:modal-middle">
       <div className="modal-box">
@@ -160,25 +159,35 @@ export const CreateProduct = ({action}) => {
             )}
           </div>
           <div className="col-span-3 flex flex-col gap-3 px-2 ">
-            <fieldset className="fieldset">
+            <fieldset className="fieldset  p-0">
               <legend className="fieldset-legend">Nombre</legend>
               <input
                 type="text"
-                className="input input-success w-full"
+                className={`input w-full ${
+                  errs?.nombre ? "input-error" : "input-success"
+                }`}
                 value={producto?.nombre}
                 name="nombre"
                 onChange={handleChange}
               />
+              <span className="text-xs text-red-600">
+                {errs?.nombre ?? null}
+              </span>
             </fieldset>
-            <fieldset className="fieldset">
+            <fieldset className="fieldset p-0">
               <legend className="fieldset-legend">Precio</legend>
               <input
                 type="number"
-                className="input input-success w-full"
+                className={`input w-full ${
+                  errs?.precio ? "input-error" : "input-success"
+                }`}
                 value={producto?.precio}
                 name="precio"
                 onChange={handleChange}
               />
+              <span className="text-xs text-red-600">
+                {errs?.precio ?? null}
+              </span>
             </fieldset>
             <input
               type="file"
@@ -195,20 +204,25 @@ export const CreateProduct = ({action}) => {
               }
             />
           </div>
-          <fieldset className="fieldset col-span-full">
+          <fieldset className="fieldset col-span-full p-0">
             <legend className="fieldset-legend">Descripcion</legend>
             <textarea
-              className="textarea textarea-success h-24 w-full"
+              className={`textarea ${errs?.descripcion ? "textarea-error":"textarea-success"} h-24 w-full`}
               value={producto?.descripcion}
               name="descripcion"
               onChange={handleChange}
             ></textarea>
+            <span className="text-xs text-red-600">{errs?.descripcion ?? null}</span>
           </fieldset>
 
           <div className="w-full col-span-full flex gap-3 justify-end">
             <button
               className="btn"
-              onClick={() => {document.getElementById("insproducto").close(), setProducto(initial)}}
+              onClick={() => {
+                document.getElementById("insproducto").close(),
+                setProducto(resetData);
+                
+              }}
             >
               Cancelar
             </button>
@@ -216,8 +230,6 @@ export const CreateProduct = ({action}) => {
               className="btn btn-success text-white"
               onClick={() => {
                 action(producto);
-                document.getElementById("insproducto").close();
-                setProducto(initial)
               }}
             >
               Registrar

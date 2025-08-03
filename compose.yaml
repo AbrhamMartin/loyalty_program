@@ -1,0 +1,17 @@
+services:
+  web:
+    build:
+      context: .
+    depends_on:
+      - pocketbase
+    ports:
+      - 80:80   
+    container_name: sistema_frontend
+
+  pocketbase:
+    image: elestio/pocketbase
+    ports:
+      - 8090:8090
+    volumes:
+      - ./pb_data:/pb_data
+    container_name: sistema_backend

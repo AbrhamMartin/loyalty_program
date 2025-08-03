@@ -4,10 +4,12 @@ import { ToastContainer, toast } from "react-toastify";
 import { usePocket } from "../pocketconexion";
 import { NoLoadinfo, IsLoadInfo } from "../err/fetchdata";
 import { Cards } from "../components/cards";
+import { useVenta } from "../api/apiREST";
 
 function HomeUsers() {
   const { pb, user, URL_BASE, logout } = usePocket();
   const { id } = user;
+  // const { getVenta } = useVenta();
   const getProducts = useSWR(
     "/getproducts",
     async () => await pb.collection("productos").getFullList()
@@ -22,8 +24,9 @@ function HomeUsers() {
     }
   );
 
-  if (getProducts.isLoading) return <IsLoadInfo></IsLoadInfo>;
-  if (getProducts.error) return <NoLoadinfo></NoLoadinfo>;
+  if (getProducts.isLoading )
+    return <IsLoadInfo></IsLoadInfo>;
+  if (getProducts.error ) return <NoLoadinfo></NoLoadinfo>;
 
   return (
     <div className="flex flex-col items-center p-5 gap-5">
@@ -53,7 +56,13 @@ function HomeUsers() {
         <p className="font-bold text-xl">{user.telefono}</p>
         <p className="flex items-center gap-2">
           Puntos acumulados:{" "}
-          {!!user.puntos ? <span className="badge badge-soft badge-primary">{user.puntos}</span>: <span className="badge badge-soft badge-error">{user.puntos}</span>}
+          {!!user.puntos ? (
+            <span className="badge badge-soft badge-primary">
+              {user.puntos}
+            </span>
+          ) : (
+            <span className="badge badge-soft badge-error">{user.puntos}</span>
+          )}
         </p>
       </div>
       <h1 className="font-semibold text-xl">Canjea tus puntos</h1>
@@ -105,6 +114,7 @@ function HomeUsers() {
           ))}
         </div>
       </div>
+      
     </div>
   );
 }

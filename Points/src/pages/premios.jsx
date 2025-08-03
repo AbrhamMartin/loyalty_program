@@ -3,8 +3,10 @@ import { NoLoadinfo, IsLoadInfo } from "../err/fetchdata";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function Premios() {
+  const navigate = useNavigate();
   const { pb, URL_BASE, user } = usePocket();
   const { puntos, id } = user;
   const getPremios = useSWR(
@@ -29,9 +31,27 @@ function Premios() {
   return (
     <div className="grid grid-cols-4 m-5 gap-5">
       <ToastContainer></ToastContainer>
-      <h1 className="col-span-full text-2xl text-center font-bold capitalize">
-        Total de puntos acumulados {puntos}
-      </h1>
+      <div className="col-span-full items-center justify-center flex gap-4">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="badge badge-soft badge-primary font-bold cursor-pointer"
+          onClick={() => navigate(-1)}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
+          />
+        </svg>
+        <h1 className="col-span-full text-2xl text-center font-bold capitalize">
+          Total de puntos acumulados {puntos}
+        </h1>
+      </div>
+
       {getPremios.data.map((x) =>
         !!x.stock ? (
           <div

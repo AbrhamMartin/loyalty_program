@@ -1,11 +1,14 @@
 import { usePocket } from "../pocketconexion";
+import { useNavigate } from "react-router-dom";
+
 export const Cpanel = () => {
   const {user} = usePocket()
+  const navigate = useNavigate()
   return (
     <div className="flex w-full p-3 bg-blue-600 text-white justify-between">
       <h1 className="text-lg">Bienvenido administrador {user?.nombre}</h1>
       <div className="flex gap-4">
-      <a href="/admin" className="w-fit flex gap-2">
+      <btn className="w-fit flex gap-2 cursor-pointer" onClick={()=> navigate("/admin")} >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -26,8 +29,8 @@ export const Cpanel = () => {
           />
         </svg>
         Productos
-      </a>
-      <a href="/admin-usuarios" className="w-fit flex gap-2">
+      </btn>
+      <btn className="w-fit flex gap-2 cursor-pointer" onClick={()=> navigate("/admin-usuarios")}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -43,8 +46,8 @@ export const Cpanel = () => {
           />
         </svg>
         Clientes
-      </a>
-      <a href="/admin-beneficios" className="w-fit flex gap-2">
+      </btn>
+      <btn className="w-fit flex gap-2 cursor-pointer" onClick={()=> navigate("/admin-beneficios")}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -60,8 +63,8 @@ export const Cpanel = () => {
           />
         </svg>
         Beneficios
-      </a>
-      <a href="/admin-premios" className="w-fit flex gap-2">
+      </btn>
+      <btn className="w-fit flex gap-2 cursor-pointer" onClick={()=> navigate("/admin-premios")}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -77,7 +80,7 @@ export const Cpanel = () => {
           />
         </svg>
         Premios
-      </a>
+      </btn>
       </div>
     </div>
   );
